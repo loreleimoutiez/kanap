@@ -48,18 +48,21 @@ fetch('http://localhost:3000/api/products', {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
-}).then(response => {
-    if (response.ok) {
-        return response.json();
-    }
-    throw new Error('Request failed');
-}, networkError => {
-    console.log(networkError.message)
-}).then(jsonResponse => {
-    if (typeof jsonResponse !== 'object') {
-        throw new Error('Response is not a valid JSON');
-    }
-    renderResponse(jsonResponse);
-}).catch(error => {
-    console.log('Error:', error.message);
-});
+})
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Request failed');
+    }, networkError => {
+        console.log(networkError.message)
+    })
+    .then(jsonResponse => {
+        if (typeof jsonResponse !== 'object') {
+            throw new Error('Response is not a valid JSON');
+        }
+        renderResponse(jsonResponse);
+    })
+    .catch(error => {
+        console.log('Error:', error.message);
+    });
