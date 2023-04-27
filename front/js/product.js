@@ -1,21 +1,23 @@
-// select the whole url and stock it in the url variable in order to search for a specific parameter using URLSearchParams
-const urlString = window.location.href;
-const url = new URL(urlString);
-const search_params = new URLSearchParams(url.search);
-const id = search_params.get('id');
+// Extract the id parameter from the URL
+const searchParams = new URLSearchParams(window.location.search)
+const id = searchParams.get('id')
+
+// Select the necessary DOM elements
+const img = document.querySelector('.product_img');
+const productName = document.querySelector('#title');
+const productPrice = document.querySelector('#price');
+const productDescription = document.querySelector('#description');
+const productColors = document.querySelector('#colors');
 
 function renderProductDetails(product) {
-    const img = document.querySelector('.item__img img');
-    const productName = document.querySelector('#title');
-    const productPrice = document.querySelector('#price');
-    const productDescription = document.querySelector('#description');
-
     img.src = product.imageUrl;
     img.setAttribute('alt', product.altTxt);
     productName.textContent = product.name;
     productPrice.textContent = `${product.price} `;
     productDescription.textContent = product.description;
 }
+
+let productDetails;
 
 fetch(`http://localhost:3000/api/products/${id}`, {
     method: 'GET',
@@ -39,6 +41,21 @@ fetch(`http://localhost:3000/api/products/${id}`, {
         renderProductDetails(jsonResponse);
         // Set the product name as the title of the page
         document.title = jsonResponse.name;
+
+        // Assign the product details to the global variable
+        productDetails = jsonResponse;
+
+        // Save the product details to local storage 
+        localStorage.setItem('productDetails', JSON.stringify(jsonResponse));
+
+        // Event listener for "Add to cart" button
+        const addToCartBtn = document.querySelector('#add-to-cart');
+        addToCartBtn.addEventListener('click', function () {
+            // Get the product details from the global variable
+            const product = productDetails;
+            addCart(product);
+        });
+
         /**
          * This code retrieves colors from the JSON to generate the code that allows selecting the colors of a product based on the product clicked on the homepage
          * 
@@ -47,6 +64,7 @@ fetch(`http://localhost:3000/api/products/${id}`, {
          */
         const colors = jsonResponse.colors;
         const select = document.querySelector('#colors');
+
         // This for loop iterates through each element of the colors array
         for (let i = 0; i < colors.length; i++) {
             // For each element of colors, a new HTML option element is created for the dropdown list
