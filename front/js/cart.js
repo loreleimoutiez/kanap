@@ -28,16 +28,19 @@ function addCart() {
         return;
     }
 
+    // get the selected color from the HTML element
+    let colorSelect = document.querySelector('#colors');
+    let color = colorSelect.value;
+
+    // add the color property to the product
+    product.color = color;
+
     let cart = getCart();
-    let foundProduct = cart.find(p => p.id == product.id);
+    let foundProduct = cart.find(p => p.id == product.id && p.color == color);
     if (foundProduct != undefined) {
-        if (foundProduct.quantity !== undefined && foundProduct.quantity !== null) {
-            foundProduct.quantity = foundProduct.quantity + parseInt(quantity) - 1;
-        } else {
-            foundProduct.quantity = 1;
-        }
+        foundProduct.quantity = foundProduct.quantity + parseInt(quantity) - 1;
     } else {
-        product.quantity = 1;
+        product.quantity = parseInt(quantity);
         cart.push(product);
     }
 
