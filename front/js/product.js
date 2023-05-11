@@ -53,8 +53,11 @@ fetch(`http://localhost:3000/api/products/${id}`, {
         addToCartBtn.addEventListener('click', function () {
             // Get the product details from the global variable
             const product = productDetails;
-            addCart(product);
+            const quantityInput = document.querySelector("#quantity");
+            const quantity = quantityInput.value;
+            addCart(quantity);
         });
+
 
         /**
          * This code retrieves colors from the JSON to generate the code that allows selecting the colors of a product based on the product clicked on the homepage
