@@ -9,7 +9,7 @@ function updateTotal() {
     let totalQuantity = getNumberProduct();
     let totalPrice = getTotalPrice();
 
-    let quantityDisplay = document.querySelector("#total-price");
+    let quantityDisplay = document.querySelector("#totalQuantity");
     if (quantityDisplay) {
         quantityDisplay.textContent = totalQuantity;
     }
@@ -68,15 +68,22 @@ function addCart(quantity) {
 
 function removeFromCart(product) {
     let cart = getCart();
-    cart = cart.filter(p => p.id != product.id);
-    saveCart(cart);
+    let productIndex = cart.findIndex(p => p.id === product.id);
+    if (productIndex !== -1) {
+        cart.splice(productIndex, 1);
+        let totalPrice = 0;
+        for (let i = 0; i < cart.length; i++) {
+            totalPrice += cart[i].price;
+        }
+        saveCart(cart, totalPrice);
+    }
+    updateTotal();
 }
 
 function changeQuantity(product, newQuantity) {
     let cart = getCart();
     let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
     if (foundProduct != undefined) {
-        let diff = newQuantity - foundProduct.quantity;
         foundProduct.quantity = newQuantity;
         if (foundProduct.quantity <= 0) {
             removeFromCart(foundProduct);
@@ -94,12 +101,11 @@ function changeQuantity(product, newQuantity) {
 
 function getNumberProduct() {
     let cart = getCart();
-    let number = 0;
-
-    for (let product of cart) {
-        number += product.quantity;
-    }
-    return number;
+    let totalQuantity = 0;
+    cart.forEach(function (product) {
+        totalQuantity += product.quantity;
+    });
+    return totalQuantity;
 }
 
 function getTotalPrice() {
