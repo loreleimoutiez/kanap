@@ -229,3 +229,91 @@ updateTotal();
 
 // FORMULAIRE 
 
+// Fonction de vérification des données saisies
+function validateInput(inputElement, regex, errorMsgElement, errorMsg) {
+    if (!regex.test(inputElement.value)) {
+        errorMsgElement.textContent = errorMsg;
+        errorMsgElement.style.color = 'red';
+        errorMsgElement.style.fontWeight = 'bold';
+        return false;
+    } else {
+        errorMsgElement.textContent = '';
+        return true;
+    }
+}
+
+// Écouteurs d'événement pour les champs de formulaire
+var firstNameElement = document.getElementById('firstName');
+if (firstNameElement !== null) {
+    firstNameElement.addEventListener('input', function () {
+        let regex = /^[a-zA-Z]+$/;
+        let errorMsg = 'Le prénom doit contenir uniquement des lettres.';
+        validateInput(this, regex, document.getElementById('firstNameErrorMsg'), errorMsg);
+    });
+}
+
+var lastNameElement = document.getElementById('lastName');
+if (lastNameElement !== null) {
+    lastNameElement.addEventListener('input', function () {
+        let regex = /^[a-zA-Z]+$/;
+        let errorMsg = 'Le nom doit contenir uniquement des lettres.';
+        validateInput(this, regex, document.getElementById('lastNameErrorMsg'), errorMsg);
+    });
+}
+
+var addressElement = document.getElementById('address');
+if (addressElement !== null) {
+    addressElement.addEventListener('input', function () {
+        let regex = /^[a-zA-Z0-9\s]+$/;
+        let errorMsg = 'L\'adresse doit contenir uniquement des lettres, des chiffres et des espaces.';
+        validateInput(this, regex, document.getElementById('addressErrorMsg'), errorMsg);
+    });
+}
+
+var cityElement = document.getElementById('city');
+if (cityElement !== null) {
+    cityElement.addEventListener('input', function () {
+        let regex = /^[a-zA-Z]+$/;
+        let errorMsg = 'La ville doit contenir uniquement des lettres.';
+        validateInput(this, regex, document.getElementById('cityErrorMsg'), errorMsg);
+    });
+}
+
+var emailElement = document.getElementById('email');
+if (emailElement !== null) {
+    emailElement.addEventListener('input', function () {
+        let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        let errorMsg = 'L\'adresse email n\'est pas valide.';
+        validateInput(this, regex, document.getElementById('emailErrorMsg'), errorMsg);
+    });
+}
+
+// Événement de soumission du formulaire
+var formElement = document.querySelector('.cart__order__form');
+if (formElement !== null) {
+    formElement.addEventListener('submit', function (event) {
+        event.preventDefault(); // Empêcher l'envoi du formulaire
+
+        // Récupérer les valeurs des champs du formulaire
+        var firstName = document.getElementById('firstName').value;
+        var lastName = document.getElementById('lastName').value;
+        var address = document.getElementById('address').value;
+        var city = document.getElementById('city').value;
+        var email = document.getElementById('email').value;
+
+        // Vérifier les données saisies
+        var isValid =
+            validateInput(document.getElementById('firstName'), /^[a-zA-Z]+$/, document.getElementById('firstNameErrorMsg'), 'Le prénom doit contenir uniquement des lettres.') &&
+            validateInput(document.getElementById('lastName'), /^[a-zA-Z]+$/, document.getElementById('lastNameErrorMsg'), 'Le nom doit contenir uniquement des lettres.') &&
+            validateInput(document.getElementById('address'), /^[a-zA-Z0-9\s]+$/, document.getElementById('addressErrorMsg'), 'L\'adresse doit contenir uniquement des lettres, des chiffres et des espaces.') &&
+            validateInput(document.getElementById('city'), /^[a-zA-Z]+$/, document.getElementById('cityErrorMsg'), 'La ville doit contenir uniquement des lettres.') &&
+            validateInput(document.getElementById('email'), /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, document.getElementById('emailErrorMsg'), 'L\'adresse email n\'est pas valide.');
+
+        // Si toutes les données sont valides, envoyer le formulaire
+        if (isValid) {
+            document.getElementById('order').value = 'En cours...';
+            document.getElementById('order').disabled = true;
+            // Ajoutez ici le code pour envoyer le formulaire au serveur
+        }
+    });
+}
