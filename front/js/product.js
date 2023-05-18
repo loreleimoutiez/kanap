@@ -13,7 +13,7 @@ function renderProductDetails(product) {
     img.src = product.imageUrl;
     img.setAttribute('alt', product.altTxt);
     productName.textContent = product.name;
-    productPrice.textContent = `${product.price} `;
+    productPrice.textContent = product.price;
     productDescription.textContent = product.description;
 }
 

@@ -15,7 +15,9 @@ function updateTotal() {
     }
 
     let priceDisplay = document.querySelector(".cart__price #total-price");
-    priceDisplay.textContent = totalPrice;
+    if (priceDisplay) {
+        priceDisplay.textContent = totalPrice;
+    }
 }
 
 function saveCart(cart) {
@@ -31,39 +33,46 @@ function getCart() {
 }
 
 function addCart(quantity) {
-    // retrieve the product from local storage
-    let productJSON = localStorage.getItem('productDetails');
-    if (productJSON == null) {
+    let color = getSelectedColor();
+    let product = getProductFromLocalStorage();
+
+    if (product == null) {
         console.log("Le produit n'est pas trouvé dans le local storage.");
         return;
     }
-    let product = JSON.parse(productJSON);
 
-    if (quantity == null || quantity == "") {
-        console.log("Veuillez entrer une quantité valide.");
+    if (color === "") {
+        window.alert("Veuillez sélectionner une couleur.");
         return;
     }
 
-    // get the selected color from the HTML element
-    let colorSelect = document.querySelector('#colors');
-    let color = colorSelect.value;
-
-    // add the color property to the product
-    product.color = color;
+    if (quantity == null || quantity === "" || quantity < 1 || quantity > 100) {
+        window.alert("Veuillez entrer une quantité valide entre 1 et 100.");
+        return;
+    }
 
     let cart = getCart();
-    let foundProduct = cart.find(p => p.id == product.id && p.color == color);
+    let foundProduct = cart.find(p => p.id === product.id && p.color === color);
     if (foundProduct != undefined) {
-        foundProduct.quantity = foundProduct.quantity + parseInt(quantity);
+        foundProduct.quantity += parseInt(quantity);
     } else {
+        product.color = color;
         product.quantity = parseInt(quantity);
         cart.push(product);
     }
 
     saveCart(cart);
-
-    // update the total price
     updateTotal();
+}
+
+function getProductFromLocalStorage() {
+    let productJSON = localStorage.getItem('productDetails');
+    return productJSON ? JSON.parse(productJSON) : null;
+}
+
+function getSelectedColor() {
+    let colorSelect = document.querySelector('#colors');
+    return colorSelect.value;
 }
 
 function removeFromCart(product) {
