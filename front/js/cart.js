@@ -145,8 +145,14 @@ cart.forEach(product => {
     itemQuantityInput.value = product.quantity;
 
     itemQuantityInput.addEventListener("input", () => {
-        changeQuantity(product, parseInt(itemQuantityInput.value));
+        let quantity = parseInt(itemQuantityInput.value);
+        if (quantity >= 1 && quantity <= 100) {
+            changeQuantity(product, quantity);
+        } else {
+            window.alert("Veuillez choisir une quantité entre 1 et 100.");
+        }
     });
+
 
     let row = document.createElement("article");
     row.classList.add("cart__item");
