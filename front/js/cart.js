@@ -1,7 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    updateTotal();
-});
-
 let product = JSON.parse(localStorage.getItem('productDetails'));
 let quantityInput = document.querySelector("#quantity");
 
@@ -131,99 +127,105 @@ function getTotalPrice() {
 // get the cart data from local storage
 let cart = getCart();
 
-/// get the DOM element for the cart items container
+// get the DOM element for the cart items container
 let cartItemsContainer = document.querySelector("#cart__items");
 
-// loop over each product in the cart and generate the HTML markup for the table row
-cart.forEach(product => {
-    let itemQuantityInput = document.createElement("input");
-    itemQuantityInput.type = "number";
-    itemQuantityInput.classList.add("itemQuantity");
-    itemQuantityInput.name = "itemQuantity";
-    itemQuantityInput.min = "1";
-    itemQuantityInput.max = "100";
-    itemQuantityInput.value = product.quantity;
+// vérifier si l'élément existe avant d'ajouter les éléments du panier
+if (cartItemsContainer) {
 
-    itemQuantityInput.addEventListener("input", () => {
-        let quantity = parseInt(itemQuantityInput.value);
-        if (quantity >= 1 && quantity <= 100) {
-            changeQuantity(product, quantity);
-        } else {
-            window.alert("Veuillez choisir une quantité entre 1 et 100.");
-        }
+    // loop over each product in the cart and generate the HTML markup for the table row
+    cart.forEach(product => {
+        let itemQuantityInput = document.createElement("input");
+        itemQuantityInput.type = "number";
+        itemQuantityInput.classList.add("itemQuantity");
+        itemQuantityInput.name = "itemQuantity";
+        itemQuantityInput.min = "1";
+        itemQuantityInput.max = "100";
+        itemQuantityInput.value = product.quantity;
+
+        itemQuantityInput.addEventListener("input", () => {
+            let quantity = parseInt(itemQuantityInput.value);
+            if (quantity >= 1 && quantity <= 100) {
+                changeQuantity(product, quantity);
+            } else {
+                window.alert("Veuillez choisir une quantité entre 1 et 100.");
+            }
+        });
+
+        let row = document.createElement("article");
+        row.classList.add("cart__item");
+        row.dataset.id = product.id;
+        row.dataset.color = product.color;
+
+        let imgDiv = document.createElement("div");
+        imgDiv.classList.add("cart__item__img");
+
+        let img = document.createElement("img");
+        img.src = product.imageUrl;
+        img.alt = product.name;
+
+        imgDiv.appendChild(img);
+
+        let contentDiv = document.createElement("div");
+        contentDiv.classList.add("cart__item__content");
+
+        let descriptionDiv = document.createElement("div");
+        descriptionDiv.classList.add("cart__item__content__description");
+
+        let name = document.createElement("h2");
+        name.textContent = product.name;
+
+        let color = document.createElement("p");
+        color.textContent = product.color;
+
+        let price = document.createElement("p");
+        price.textContent = product.price + " €";
+
+        descriptionDiv.appendChild(name);
+        descriptionDiv.appendChild(color);
+        descriptionDiv.appendChild(price);
+
+        let settingsDiv = document.createElement("div");
+        settingsDiv.classList.add("cart__item__content__settings");
+
+        let quantityDiv = document.createElement("div");
+        quantityDiv.classList.add("cart__item__content__settings__quantity");
+
+        let quantityLabel = document.createElement("p");
+        quantityLabel.textContent = "Qté : ";
+
+        quantityDiv.appendChild(quantityLabel);
+        quantityDiv.appendChild(itemQuantityInput);
+
+        let deleteDiv = document.createElement("div");
+        deleteDiv.classList.add("cart__item__content__settings__delete");
+
+        let deleteLink = document.createElement("p");
+        deleteLink.classList.add("deleteItem");
+        deleteLink.textContent = "Supprimer";
+        deleteLink.addEventListener("click", () => {
+            removeFromCart(product);
+            row.remove();
+            updateTotal();
+        });
+
+        deleteDiv.appendChild(deleteLink);
+
+        settingsDiv.appendChild(quantityDiv);
+        settingsDiv.appendChild(deleteDiv);
+
+        contentDiv.appendChild(descriptionDiv);
+        contentDiv.appendChild(settingsDiv);
+
+        row.appendChild(imgDiv);
+        row.appendChild(contentDiv);
+
+        cartItemsContainer.appendChild(row);
     });
-
-
-    let row = document.createElement("article");
-    row.classList.add("cart__item");
-    row.dataset.id = product.id;
-    row.dataset.color = product.color;
-
-    let imgDiv = document.createElement("div");
-    imgDiv.classList.add("cart__item__img");
-
-    let img = document.createElement("img");
-    img.src = product.imageUrl;
-    img.alt = product.name;
-
-    imgDiv.appendChild(img);
-
-    let contentDiv = document.createElement("div");
-    contentDiv.classList.add("cart__item__content");
-
-    let descriptionDiv = document.createElement("div");
-    descriptionDiv.classList.add("cart__item__content__description");
-
-    let name = document.createElement("h2");
-    name.textContent = product.name;
-
-    let color = document.createElement("p");
-    color.textContent = product.color;
-
-    let price = document.createElement("p");
-    price.textContent = product.price + " €";
-
-    descriptionDiv.appendChild(name);
-    descriptionDiv.appendChild(color);
-    descriptionDiv.appendChild(price);
-
-    let settingsDiv = document.createElement("div");
-    settingsDiv.classList.add("cart__item__content__settings");
-
-    let quantityDiv = document.createElement("div");
-    quantityDiv.classList.add("cart__item__content__settings__quantity");
-
-    let quantityLabel = document.createElement("p");
-    quantityLabel.textContent = "Qté : ";
-
-    quantityDiv.appendChild(quantityLabel);
-    quantityDiv.appendChild(itemQuantityInput);
-
-    let deleteDiv = document.createElement("div");
-    deleteDiv.classList.add("cart__item__content__settings__delete");
-
-    let deleteLink = document.createElement("p");
-    deleteLink.classList.add("deleteItem");
-    deleteLink.textContent = "Supprimer";
-    deleteLink.addEventListener("click", () => {
-        removeFromCart(product);
-        row.remove();
-        updateTotal();
-    });
-
-    deleteDiv.appendChild(deleteLink);
-
-    settingsDiv.appendChild(quantityDiv);
-    settingsDiv.appendChild(deleteDiv);
-
-    contentDiv.appendChild(descriptionDiv);
-    contentDiv.appendChild(settingsDiv);
-
-    row.appendChild(imgDiv);
-    row.appendChild(contentDiv);
-
-    cartItemsContainer.appendChild(row);
-});
+}
 
 // update the total quantity and price
 updateTotal();
+
+// FORMULAIRE 
+
