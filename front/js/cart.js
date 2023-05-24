@@ -31,6 +31,7 @@ function getCart() {
 
 function addCart(quantity) {
     let color = getSelectedColor();
+    let product = getProductFromLocalStorage();
 
     if (product == null) {
         console.log("Le produit n'est pas trouvé dans le local storage.");
@@ -296,13 +297,6 @@ if (formElement !== null) {
     formElement.addEventListener('submit', function (event) {
         event.preventDefault(); // Empêcher l'envoi du formulaire
 
-        // Récupérer les valeurs des champs du formulaire
-        let inputName = document.getElementById('firstName');
-        let inputLastName = document.getElementById('lastName');
-        let inputAdress = document.getElementById('address');
-        let inputCity = document.getElementById('city');
-        let inputMail = document.getElementById('email');
-
         let product = getProductFromLocalStorage();
         if (product == null) {
             console.log("Le produit n'est pas trouvé dans le local storage.");
@@ -316,8 +310,6 @@ if (formElement !== null) {
         products.forEach((product) => {
             idProducts.push(product._id)
         })
-
-        console.log("idProducts = " + idProducts);
 
         // Vérifier les données saisies
         let isValid =
@@ -336,7 +328,6 @@ if (formElement !== null) {
 
             document.getElementById('order').value = 'En cours...';
             document.getElementById('order').disabled = true;
-            console.log(order);
 
             // Envoyer l'objet contact au serveur
             fetch(`http://localhost:3000/api/products/order`, {
@@ -364,7 +355,10 @@ if (formElement !== null) {
                     const orderId = data.orderId;
                     const confirmationUrl = `confirmation.html?id=${orderId}`;
                     window.location.href = confirmationUrl;
-                    console.log('log de data = ' + data);
+                    // console.log('log de data = ' + JSON.stringify(data));
+
+                    // supprimer les produits du local storage
+                    localStorage.removeItem("cart");
                 })
                 .catch(error => {
                     // Gestion des erreurs
