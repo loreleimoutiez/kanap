@@ -25,6 +25,7 @@ function getCart() {
     if (cart == null) {
         return [];
     }
+    // Convertir les produits du panier en tableau JavaScript
     return JSON.parse(cart);
 }
 
@@ -224,6 +225,8 @@ if (cartItemsContainer) {
     });
 }
 
+let products = getCart();
+
 // update the total quantity and price
 updateTotal();
 
@@ -243,7 +246,7 @@ function validateInput(inputElement, regex, errorMsgElement, errorMsg) {
 }
 
 // Écouteurs d'événement pour les champs de formulaire
-var firstNameElement = document.getElementById('firstName');
+let firstNameElement = document.getElementById('firstName');
 if (firstNameElement !== null) {
     firstNameElement.addEventListener('input', function () {
         let regex = /^[a-zA-Z]+$/;
@@ -252,7 +255,7 @@ if (firstNameElement !== null) {
     });
 }
 
-var lastNameElement = document.getElementById('lastName');
+let lastNameElement = document.getElementById('lastName');
 if (lastNameElement !== null) {
     lastNameElement.addEventListener('input', function () {
         let regex = /^[a-zA-Z]+$/;
@@ -261,7 +264,7 @@ if (lastNameElement !== null) {
     });
 }
 
-var addressElement = document.getElementById('address');
+let addressElement = document.getElementById('address');
 if (addressElement !== null) {
     addressElement.addEventListener('input', function () {
         let regex = /^[a-zA-Z0-9\s]+$/;
@@ -270,7 +273,7 @@ if (addressElement !== null) {
     });
 }
 
-var cityElement = document.getElementById('city');
+let cityElement = document.getElementById('city');
 if (cityElement !== null) {
     cityElement.addEventListener('input', function () {
         let regex = /^[a-zA-Z]+$/;
@@ -279,7 +282,7 @@ if (cityElement !== null) {
     });
 }
 
-var emailElement = document.getElementById('email');
+let emailElement = document.getElementById('email');
 if (emailElement !== null) {
     emailElement.addEventListener('input', function () {
         let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -289,20 +292,45 @@ if (emailElement !== null) {
 }
 
 // Événement de soumission du formulaire
-var formElement = document.querySelector('.cart__order__form');
+let formElement = document.querySelector('.cart__order__form');
 if (formElement !== null) {
     formElement.addEventListener('submit', function (event) {
         event.preventDefault(); // Empêcher l'envoi du formulaire
 
         // Récupérer les valeurs des champs du formulaire
-        var firstName = document.getElementById('firstName').value;
-        var lastName = document.getElementById('lastName').value;
-        var address = document.getElementById('address').value;
-        var city = document.getElementById('city').value;
-        var email = document.getElementById('email').value;
+        let inputName = document.getElementById('firstName');
+        let inputLastName = document.getElementById('lastName');
+        let inputAdress = document.getElementById('address');
+        let inputCity = document.getElementById('city');
+        let inputMail = document.getElementById('email');
+
+        let product = getProductFromLocalStorage();
+        if (product == null) {
+            console.log("Le produit n'est pas trouvé dans le local storage.");
+            return;
+        }
+
+        let idProducts = [];
+        console.log(products);
+        products.forEach((product) => {
+            idProducts.push(product.id)
+        })
+        console.log('je meurs');
+        console.log(idProducts);
+
+        const order = {
+            contact: {
+                firstName: inputName.value,
+                lastName: inputLastName.value,
+                address: inputAdress.value,
+                city: inputCity.value,
+                email: inputMail.value,
+            },
+            products: idProducts,
+        }
 
         // Vérifier les données saisies
-        var isValid =
+        let isValid =
             validateInput(document.getElementById('firstName'), /^[a-zA-Z]+$/, document.getElementById('firstNameErrorMsg'), 'Le prénom doit contenir uniquement des lettres.') &&
             validateInput(document.getElementById('lastName'), /^[a-zA-Z]+$/, document.getElementById('lastNameErrorMsg'), 'Le nom doit contenir uniquement des lettres.') &&
             validateInput(document.getElementById('address'), /^[a-zA-Z0-9\s]+$/, document.getElementById('addressErrorMsg'), 'L\'adresse doit contenir uniquement des lettres, des chiffres et des espaces.') &&
@@ -311,9 +339,35 @@ if (formElement !== null) {
 
         // Si toutes les données sont valides, envoyer le formulaire
         if (isValid) {
+            if (products.length === 0) {
+                console.log("Le panier est vide.");
+                return;
+            }
+
             document.getElementById('order').value = 'En cours...';
             document.getElementById('order').disabled = true;
-            // Ajoutez ici le code pour envoyer le formulaire au serveur
+            console.log(order);
+
+            // Envoyer l'objet contact au serveur
+            fetch(`http://localhost:3000/api/products/order`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(order) // 1ère modif ici 
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Redirection vers la page de confirmation avec l'ID de commande
+                    console.log(data);
+                    localStorage.setItem("orderId", data.orderId);
+                    document.location.href = "confirmation.html";
+                })
+                .catch(error => {
+                    // Gestion des erreurs
+                    console.error('Erreur:', error);
+                });
         }
     });
 }
