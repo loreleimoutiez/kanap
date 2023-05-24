@@ -1,5 +1,4 @@
 let product = JSON.parse(localStorage.getItem('productDetails'));
-let quantityInput = document.querySelector("#quantity");
 
 function updateTotal() {
     let totalQuantity = getNumberProduct();
@@ -43,10 +42,13 @@ function addCart(quantity) {
         return;
     }
 
-    if (quantity == null || quantity === "" || quantity < 1 || quantity > 100) {
+    if (quantity === "" || parseInt(quantity) <= 0 || parseInt(quantity) > 100) {
         window.alert("Veuillez entrer une quantité valide entre 1 et 100.");
         return;
     }
+
+    // Vider le localStorage
+    localStorage.removeItem("cart");
 
     let cart = getCart();
     let foundProduct = cart.find(p => p.id === product.id && p.color === color);
@@ -90,7 +92,12 @@ function changeQuantity(product, newQuantity) {
     let cart = getCart();
     let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
     if (foundProduct != undefined) {
-        foundProduct.quantity = newQuantity;
+        if (newQuantity === "" || newQuantity < 1 || newQuantity > 100) {
+            window.alert("Veuillez entrer une quantité valide entre 1 et 100.");
+            return;
+        }
+
+        foundProduct.quantity = parseInt(newQuantity);
         if (foundProduct.quantity <= 0) {
             removeFromCart(foundProduct);
         } else {
