@@ -31,7 +31,6 @@ function getCart() {
 
 function addCart(quantity) {
     let color = getSelectedColor();
-    let product = getProductFromLocalStorage();
 
     if (product == null) {
         console.log("Le produit n'est pas trouvé dans le local storage.");
@@ -225,7 +224,7 @@ if (cartItemsContainer) {
     });
 }
 
-let products = getCart();
+let products = cart;
 
 // update the total quantity and price
 updateTotal();
@@ -311,23 +310,14 @@ if (formElement !== null) {
         }
 
         let idProducts = [];
-        console.log(products);
-        products.forEach((product) => {
-            idProducts.push(product.id)
-        })
-        console.log('je meurs');
-        console.log(idProducts);
 
-        const order = {
-            contact: {
-                firstName: inputName.value,
-                lastName: inputLastName.value,
-                address: inputAdress.value,
-                city: inputCity.value,
-                email: inputMail.value,
-            },
-            products: idProducts,
-        }
+        console.log("products = " + products);
+
+        products.forEach((product) => {
+            idProducts.push(product._id)
+        })
+
+        console.log("idProducts = " + idProducts);
 
         // Vérifier les données saisies
         let isValid =
@@ -354,15 +344,27 @@ if (formElement !== null) {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'Origin': 'http://127.0.0.1:5501/front/html/cart.html'
                 },
-                body: JSON.stringify(order) // 1ère modif ici 
+                body: JSON.stringify({
+                    contact: {
+                        firstName: document.querySelector('[name="firstName"]').value,
+                        lastName: document.querySelector('[name="lastName"]').value,
+                        address: document.querySelector('[name="address"]').value,
+                        city: document.querySelector('[name="city"]').value,
+                        email: document.querySelector('[name="email"]').value
+                    },
+                    products: idProducts
+                })
             })
                 .then(response => response.json())
                 .then(data => {
                     // Redirection vers la page de confirmation avec l'ID de commande
-                    console.log(data);
                     localStorage.setItem("orderId", data.orderId);
-                    document.location.href = "confirmation.html";
+                    const orderId = data.orderId;
+                    const confirmationUrl = `confirmation.html?id=${orderId}`;
+                    window.location.href = confirmationUrl;
+                    console.log('log de data = ' + data);
                 })
                 .catch(error => {
                     // Gestion des erreurs
