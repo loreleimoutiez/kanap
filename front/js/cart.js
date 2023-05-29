@@ -1,5 +1,3 @@
-let itemQuantityInput;
-
 function updateTotal() {
     let totalQuantity = getNumberProduct();
     let totalPrice = getTotalPrice();
@@ -140,7 +138,7 @@ if (cartItemsContainer) {
 
     // loop over each product in the cart and generate the HTML markup for the table row
     cart.forEach(product => {
-        itemQuantityInput = document.createElement("input");
+        let itemQuantityInput = document.createElement("input");
         itemQuantityInput.type = "number";
         itemQuantityInput.classList.add("itemQuantity");
         itemQuantityInput.name = "itemQuantity";
