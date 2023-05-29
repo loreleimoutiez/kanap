@@ -1,4 +1,3 @@
-let product = JSON.parse(localStorage.getItem('productDetails'));
 let itemQuantityInput;
 
 function updateTotal() {
@@ -127,7 +126,6 @@ function getTotalPrice() {
     for (let product of cart) {
         total += product.quantity * product.price;
     }
-
     return total;
 }
 
