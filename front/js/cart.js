@@ -1,4 +1,5 @@
 let product = JSON.parse(localStorage.getItem('productDetails'));
+let itemQuantityInput;
 
 function updateTotal() {
     let totalQuantity = getNumberProduct();
@@ -41,16 +42,14 @@ function addCart(quantity) {
         window.alert("Veuillez sélectionner une couleur.");
         return;
     }
-
+    // parseInt() permet de convertir une chaîne de caractères en un entier.
     if (quantity === "" || parseInt(quantity) <= 0 || parseInt(quantity) > 100) {
         window.alert("Veuillez entrer une quantité valide entre 1 et 100.");
         return;
     }
 
-    // Vider le localStorage
-    localStorage.removeItem("cart");
-
     let cart = getCart();
+
     let foundProduct = cart.find(p => p.id === product.id && p.color === color);
     if (foundProduct != undefined) {
         foundProduct.quantity += parseInt(quantity);
@@ -143,7 +142,7 @@ if (cartItemsContainer) {
 
     // loop over each product in the cart and generate the HTML markup for the table row
     cart.forEach(product => {
-        let itemQuantityInput = document.createElement("input");
+        itemQuantityInput = document.createElement("input");
         itemQuantityInput.type = "number";
         itemQuantityInput.classList.add("itemQuantity");
         itemQuantityInput.name = "itemQuantity";
