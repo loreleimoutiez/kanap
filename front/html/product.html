@@ -71,24 +71,26 @@
               <p id="description">Dis enim malesuada risus sapien gravida nulla nisl arcu.</p>
             </div>
 
-            <div class="item__content__settings">
-              <div class="item__content__settings__color">
-                <label for="color-select">Choisir une couleur :</label>
-                <select name="color-select" id="colors">
-                  <option value="">--SVP, choisissez une couleur --</option>
-                </select>
+            <form id="add-product">
+              <div class="item__content__settings">
+                <div class="item__content__settings__color">
+                  <label for="colors">Choisir une couleur :</label>
+                  <select name="color" id="colors" required>
+                    <option value="">--SVP, choisissez une couleur --</option>
+                  </select>
+                </div>
+
+                <div class="item__content__settings__quantity">
+                  <label for="quantity">Nombre d'article(s) (1-100) :</label>
+                  <input type="number" name="quantity" min="1" max="100" step="1" value="1" id="quantity" required>
+                </div>
               </div>
 
-              <div class="item__content__settings__quantity">
-                <label for="itemQuantity">Nombre d'article(s) (1-100) :</label>
-                <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
+              <div class="item__content__addButton">
+                <button id="add-to-cart" type="submit">Ajouter au
+                  panier</button>
               </div>
-            </div>
-
-            <div class="item__content__addButton">
-              <button id="add-to-cart" onclick="addCart()">Ajouter au
-                panier</button>
-            </div>
+            </form>
 
           </div>
         </article>
@@ -119,8 +121,9 @@
       </div>
     </div>
   </footer>
-  <script src="../js/product.js"></script>
-  <script src="../js/cart.js"></script>
+  <script type="module" src="/js/module/index.js"></script>
+  <script type="module" src="/js/module/product.js"></script>
+
 </body>
 
 </html>
