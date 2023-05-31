@@ -12,7 +12,7 @@ export default class Cart extends LocalStoragePersister {
             return window.alert("Veuillez entrer une quantité valide entre 1 et 100.");
         }
 
-        const hasAlreadyItem = this.items.find(cartItem => cartItem.product.id === product.id);
+        const hasAlreadyItem = this.items.find(cartItem => cartItem.product.id === product.id && cartItem.product.color === product.color);
 
         if (hasAlreadyItem) {
             hasAlreadyItem.quantity += quantity;
@@ -28,7 +28,7 @@ export default class Cart extends LocalStoragePersister {
             return window.alert("Veuillez entrer une quantité valide entre 1 et 100.");
         }
 
-        const hasAlreadyItem = this.items.find(cartItem => cartItem.product.id === product.id);
+        const hasAlreadyItem = this.items.find(cartItem => cartItem.product.id === product.id && cartItem.product.color === product.color);
         if (hasAlreadyItem) {
             hasAlreadyItem.quantity = newQuantity;
         }

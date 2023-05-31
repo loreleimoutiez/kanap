@@ -72,6 +72,7 @@ fetch(`http://localhost:3000/api/products/${id}`, {
             const product = new Product(
                 jsonResponse._id,
                 jsonResponse.name,
+                color.value,
                 jsonResponse.price,
                 jsonResponse.imageUrl,
                 jsonResponse.altTxt,
