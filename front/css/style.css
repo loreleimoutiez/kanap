@@ -156,7 +156,7 @@ main {
 	box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
 }
 
-.items article {
+.items product-card {
 	background-color: var(--secondary-color);
 	display: flex;
 	flex-direction: column;
