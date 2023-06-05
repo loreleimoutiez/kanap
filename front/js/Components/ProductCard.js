@@ -26,7 +26,7 @@ class ProductCard extends HTMLElement {
     render() {
         return `
             <article class="product-card">
-                <a class="product-link" href="/html/product.html?id=${this.identifier}">
+                <a class="product-link" href="/front/html/product.html?id=${this.identifier}">
                     <img class="product-image" src="${this.image}" alt="${this.alt}">
                     <h3 class="product-title">${this.title}</h3>
                     <p class="product-description">${this.description}</p>

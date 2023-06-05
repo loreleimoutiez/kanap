@@ -34,9 +34,8 @@ class ProductCatalog extends HTMLElement {
     render(products) {
         return `
             <section class="items" id="items">
-                ${
-                    products.map(product => {
-                        return `
+                ${products.map(product => {
+            return `
                             <product-card 
                                 identifier="${product._id}"
                                 title="${product.name}"
@@ -46,8 +45,8 @@ class ProductCatalog extends HTMLElement {
                             >
                             </product-card>
                         `;
-                    }).join('')
-                }
+        }).join('')
+            }
             </section>
         `;
     }
